@@ -1,36 +1,37 @@
 {
   "schemaVersion": 1,
-  "id": "addon-template",
+  "id": "katool",
   "version": "${version}",
-  "name": "Addon Template",
-  "description": "An addon template for Meteor Client addons.",
+  "name": "katool",
+  "description": "just made for smp servers",
   "authors": [
-    "seasnail"
+    "Aleo1-lab"
   ],
   "contact": {
-    "sources": "https://github.com/MeteorDevelopment/meteor-addon-template"
+    "repo": "https://github.com/Aleo1-lab/katool"
   },
-  "icon": "assets/template/icon.png",
+  "license": "All Rights Reserved",
+  "icon": "assets/katool/icon.png",
   "environment": "client",
   "entrypoints": {
     "meteor": [
-      "com.example.addon.AddonTemplate"
+      "com.aleo1lab.katool.KatoolAddon"
     ]
   },
   "mixins": [
-    "addon-template.mixins.json"
+    "mixins.json"
   ],
   "custom": {
     "meteor-client:color": "225,25,25",
     "modmenu": {
-      "parent": {
-        "id": "meteor-client"
+      "links": {
+        "modmenu.repo": "https://github.com/Aleo1-lab/katool"
       }
     }
   },
   "depends": {
     "java": ">=21",
-    "minecraft": ["${mc_version}", "1.21.9"],
+    "minecraft": [ "${mc_version}" ],
     "meteor-client": "*"
   }
 }

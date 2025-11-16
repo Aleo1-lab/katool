@@ -1,11 +1,11 @@
 plugins {
-    alias(libs.plugins.fabric.loom)
+    id("fabric-loom") version "1.10-SNAPSHOT"
 }
 
 base {
-    archivesName = properties["archives_base_name"] as String
-    version = libs.versions.mod.version.get()
-    group = properties["maven_group"] as String
+    archivesName = property("archives_base_name") as String
+    version = property("mod_version") as String
+    group = property("maven_group") as String
 }
 
 repositories {
@@ -17,27 +17,34 @@ repositories {
         name = "meteor-maven-snapshots"
         url = uri("https://maven.meteordev.org/snapshots")
     }
+    maven {
+        url = uri("https://jitpack.io")
+    }
 }
 
 dependencies {
     // Fabric
-    minecraft(libs.minecraft)
-    mappings(variantOf(libs.yarn) { classifier("v2") })
-    modImplementation(libs.fabric.loader)
+    minecraft("com.mojang:minecraft:${property("minecraft_version")}")
+    mappings("net.fabricmc:yarn:${property("yarn_mappings")}:v2")
+    modImplementation("net.fabricmc:fabric-loader:${property("loader_version")}")
 
-    // Meteor
-    modImplementation(libs.meteor.client)
+    // Meteor Client
+    modImplementation("meteordevelopment:meteor-client:${property("minecraft_version")}-SNAPSHOT")
+
+    // Baritone
+    modImplementation("meteordevelopment:baritone:${property("baritone_version")}-SNAPSHOT")
+
+    implementation("com.google.code.gson:gson:2.10.1")
 }
 
 tasks {
     processResources {
         val propertyMap = mapOf(
             "version" to project.version,
-            "mc_version" to libs.versions.minecraft.get()
+            "mc_version" to project.property("minecraft_version"),
         )
 
         inputs.properties(propertyMap)
-
         filteringCharset = "UTF-8"
 
         filesMatching("fabric.mod.json") {
@@ -46,10 +53,9 @@ tasks {
     }
 
     jar {
-        inputs.property("archivesName", project.base.archivesName.get())
-
+        val licenseSuffix = project.base.archivesName.get()
         from("LICENSE") {
-            rename { "${it}_${inputs.properties["archivesName"]}" }
+            rename { "${it}_${licenseSuffix}" }
         }
     }
 
@@ -61,7 +67,5 @@ tasks {
     withType<JavaCompile> {
         options.encoding = "UTF-8"
         options.release = 21
-        options.compilerArgs.add("-Xlint:deprecation")
-        options.compilerArgs.add("-Xlint:unchecked")
     }
 }
